@@ -1,5 +1,6 @@
 package com.github.syafiqq.rxandroidtest001.create
 
+import com.github.syafiqq.rxandroidtest001.exception.CustomException
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import org.junit.Test
@@ -24,8 +25,6 @@ class DeferTest {
 
     @Test
     fun it_successful_access_next_error_with_single_value() {
-        class CustomException : Exception()
-
         val o = Observable.defer<Int> {
             Observable.create<Int> {
                 it.onError(CustomException())

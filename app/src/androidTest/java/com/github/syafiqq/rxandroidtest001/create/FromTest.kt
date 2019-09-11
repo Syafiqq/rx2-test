@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.Callable
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -81,5 +82,20 @@ class FromTest {
         subscriber.assertNoErrors()
         subscriber.assertComplete()
         subscriber.assertValues(1, 2, 3, 4, 5)
+    }
+
+    @Test
+    fun it_successful_create_from_callable() {
+        val c = Callable {
+            1
+        }
+        val o = Observable.fromCallable(c)
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertValue(1)
     }
 }

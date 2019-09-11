@@ -57,4 +57,29 @@ class FromTest {
         subscriber.assertNotComplete()
         subscriber.assertNoValues()
     }
+
+    @Test
+    fun it_successful_create_from_iterable() {
+        val i = 1..5
+        val o = Observable.fromIterable(i)
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertValues(1, 2, 3, 4, 5)
+    }
+
+    @Test
+    fun it_successful_create_from_array() {
+        val o = Observable.fromArray(1, 2, 3, 4, 5)
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertValues(1, 2, 3, 4, 5)
+    }
 }

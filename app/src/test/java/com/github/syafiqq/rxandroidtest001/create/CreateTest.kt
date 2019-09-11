@@ -6,7 +6,7 @@ import org.junit.Test
 
 class CreateTest {
     @Test
-    fun it_successful_access_next_and_complete_using_create_method() {
+    fun it_successful_access_next_and_complete_with_single_value() {
         val o = Observable.create<Int> {
             it.onNext(1)
             it.onComplete()
@@ -21,7 +21,7 @@ class CreateTest {
     }
 
     @Test
-    fun it_successful_access_next_error_using_create_method() {
+    fun it_successful_access_next_error_with_single_value() {
         class CustomException : Exception()
 
         val o = Observable.create<Int> { it.onError(CustomException()) }
@@ -57,7 +57,7 @@ class CreateTest {
     }
 
     @Test
-    fun it_successful_access_next_and_complete_on_array() {
+    fun it_successful_access_next_and_complete_with_array() {
         val o = Observable.create<Int> {
             for (i in 1..10) {
                 it.onNext(i)

@@ -64,6 +64,22 @@ class DeferTest {
         subscriber1.assertValue(1)
     }
 
+
+    @Test
+    fun it_successful_access_next_and_complete_with_reversed_flow() {
+        val o = Observable.create<Int> {
+            it.onComplete()
+            it.onNext(1)
+        }
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertNoValues()
+    }
+
     @Test
     fun it_successful_access_next_and_complete_with_array() {
         val o = Observable.defer<Int> {

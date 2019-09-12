@@ -30,6 +30,17 @@ class IntervalTest {
     }
 
     @Test
+    fun it_successful_implement_interval_with_two_step_get_one() {
+        Observable.interval(50, TimeUnit.MILLISECONDS)
+            .take(2)
+            .test()
+            .awaitDone(70L, TimeUnit.MILLISECONDS)
+            .assertNoErrors()
+            .assertNotComplete()
+            .assertValues(0)
+    }
+
+    @Test
     fun it_successful_implement_interval_with_two_step_and_immediate_scheduler() {
         Observable.interval(50, TimeUnit.MILLISECONDS, Schedulers.computation())
             .take(2)

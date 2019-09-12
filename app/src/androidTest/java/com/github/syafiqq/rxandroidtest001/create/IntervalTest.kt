@@ -17,6 +17,7 @@ class IntervalTest {
             .awaitDone(120L, TimeUnit.MILLISECONDS)
             .assertNoErrors()
             .assertNotComplete()
+            .assertValues(0, 1)
     }
 
     @Test
@@ -63,6 +64,17 @@ class IntervalTest {
             .awaitDone(170L, TimeUnit.MILLISECONDS)
             .assertNoErrors()
             .assertNotComplete()
+            .assertValues(0, 1)
+    }
+
+    @Test
+    fun it_successful_implement_delay_interval_with_no_wait() {
+        Observable.interval(100, 50, TimeUnit.MILLISECONDS)
+            .test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertNotComplete()
+            .assertNoValues()
     }
 
     @Test

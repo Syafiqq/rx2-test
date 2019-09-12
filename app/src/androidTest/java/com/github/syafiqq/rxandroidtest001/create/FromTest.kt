@@ -80,20 +80,6 @@ class FromTest {
     }
 
     @Test
-    fun it_successful_create_from_future_with_schedule_and_surpass_timeout() {
-        val c = CompletableFuture.supplyAsync {
-            Thread.sleep(100)
-            1
-        }
-        Observable.fromFuture(c, 50, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .test()
-            .awaitDone(150L, TimeUnit.MILLISECONDS)
-            .assertError(TimeoutException::class.java)
-            .assertNotComplete()
-            .assertNoValues()
-    }
-
-    @Test
     fun it_successful_create_from_iterable() {
         val c = 1..5
         Observable.fromIterable(c)

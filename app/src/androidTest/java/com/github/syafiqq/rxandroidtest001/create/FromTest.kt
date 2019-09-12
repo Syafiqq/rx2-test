@@ -2,6 +2,7 @@ package com.github.syafiqq.rxandroidtest001.create
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.Observable
+import io.reactivex.internal.schedulers.ImmediateThinScheduler
 import io.reactivex.observers.TestObserver
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +19,38 @@ class FromTest {
             1
         }
         val o = Observable.fromFuture(s)
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertValue(1)
+    }
+
+    @Test
+    fun it_successful_create_from_future_with_schedule() {
+        val c = CompletableFuture.supplyAsync {
+            1
+        }
+        val o = Observable.fromFuture(c, ImmediateThinScheduler.INSTANCE)
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertValue(1)
+    }
+
+    @Test
+    fun it_successful_create_from_future_with_schedule_and_timeout() {
+        val c = CompletableFuture.supplyAsync {
+            Thread.sleep(100)
+            1
+        }
+        val o =
+            Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS, ImmediateThinScheduler.INSTANCE)
 
         val subscriber = TestObserver<Int>()
         o.subscribe(subscriber)
@@ -57,6 +90,23 @@ class FromTest {
         subscriber.assertError(TimeoutException::class.java)
         subscriber.assertNotComplete()
         subscriber.assertNoValues()
+    }
+
+    @Test
+    fun it_successful_create_from_future_with_schedule_and_surpass_timeout() {
+        val c = CompletableFuture.supplyAsync {
+            Thread.sleep(100)
+            1
+        }
+        val o =
+            Observable.fromFuture(c, 50L, TimeUnit.MILLISECONDS, ImmediateThinScheduler.INSTANCE)
+
+        val subscriber = TestObserver<Int>()
+        o.subscribe(subscriber)
+
+        subscriber.assertNoErrors()
+        subscriber.assertComplete()
+        subscriber.assertValue(1)
     }
 
     @Test

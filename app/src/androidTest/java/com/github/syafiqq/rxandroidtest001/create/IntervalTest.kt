@@ -11,15 +11,15 @@ import java.util.concurrent.TimeUnit
 class IntervalTest {
     @Test
     fun it_successful_implement_interval() {
-        val o = Observable.interval(100, TimeUnit.MILLISECONDS).takeUntil { it < 5 }
+        val o = Observable.interval(50, TimeUnit.MILLISECONDS).take(2)
 
         val subscriber = TestObserver<Long>()
         o.subscribe(subscriber)
 
-        Thread.sleep(1000)
+        Thread.sleep(120)
 
         subscriber.assertNoErrors()
         subscriber.assertComplete()
-        subscriber.assertValue(1)
+        subscriber.assertValues(0, 1)
     }
 }

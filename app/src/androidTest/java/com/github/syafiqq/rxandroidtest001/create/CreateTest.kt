@@ -3,7 +3,6 @@ package com.github.syafiqq.rxandroidtest001.create
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.syafiqq.rxandroidtest001.exception.CustomException
 import io.reactivex.Observable
-import io.reactivex.observers.TestObserver
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -11,27 +10,27 @@ import org.junit.runner.RunWith
 class CreateTest {
     @Test
     fun it_successful_access_next_and_complete_with_single_value() {
-        val o = Observable.create<Int> {
+        Observable.create<Int> {
             it.onNext(1)
             it.onComplete()
         }
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+            .test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
     }
 
     @Test
     fun it_successful_access_next_error_with_single_value() {
-        val o = Observable.create<Int> { it.onError(CustomException()) }
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertError(CustomException::class.java)
+        Observable.create<Int> {
+            it.onError(CustomException())
+        }
+            .test()
+            .assertSubscribed()
+            .assertError(CustomException::class.java)
+            .assertNotComplete()
+            .assertNoValues()
     }
 
     @Test
@@ -41,53 +40,47 @@ class CreateTest {
             it.onComplete()
         }
 
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
+        o.test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
 
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Thread.sleep(500)
 
-        Thread.sleep(1000)
-
-        val subscriber1 = TestObserver<Int>()
-        o.subscribe(subscriber1)
-
-        subscriber1.assertNoErrors()
-        subscriber1.assertComplete()
-        subscriber1.assertValue(1)
+        o.test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
     }
 
     @Test
     fun it_successful_access_next_and_complete_with_reversed_flow() {
-        val o = Observable.create<Int> {
+        Observable.create<Int> {
             it.onComplete()
             it.onNext(1)
         }
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertNoValues()
+            .test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertComplete()
+            .assertNoValues()
     }
 
     @Test
     fun it_successful_access_next_and_complete_with_array() {
-        val o = Observable.create<Int> {
+        Observable.create<Int> {
             for (i in 1..10) {
                 it.onNext(i)
             }
 
             it.onComplete()
         }
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValues(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+            .test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValues(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     }
 }

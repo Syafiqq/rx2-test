@@ -2,7 +2,6 @@ package com.github.syafiqq.rxandroidtest001.create
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.Observable
-import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,17 +14,14 @@ import java.util.concurrent.TimeoutException
 class FromTest {
     @Test
     fun it_successful_create_with_future() {
-        val s = CompletableFuture.supplyAsync {
+        val c = CompletableFuture.supplyAsync {
             1
         }
-        val o = Observable.fromFuture(s)
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Observable.fromFuture(c)
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
     }
 
     @Test
@@ -33,14 +29,11 @@ class FromTest {
         val c = CompletableFuture.supplyAsync {
             1
         }
-        val o = Observable.fromFuture(c, Schedulers.trampoline())
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Observable.fromFuture(c, Schedulers.trampoline())
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
     }
 
     @Test
@@ -49,47 +42,41 @@ class FromTest {
             Thread.sleep(100)
             1
         }
-        val o =
-            Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
+            .awaitDone(200L, TimeUnit.MILLISECONDS)
     }
 
     @Test
     fun it_successful_create_with_future_with_time_unit() {
-        val s = CompletableFuture.supplyAsync {
+        val c = CompletableFuture.supplyAsync {
             Thread.sleep(100)
             1
         }
-        val o = Observable.fromFuture(s, 150L, TimeUnit.MILLISECONDS)
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS)
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
+            .awaitDone(200L, TimeUnit.MILLISECONDS)
+        Thread.sleep(200)
     }
 
     @Test
     fun it_successful_create_with_future_with_surpass_time_unit() {
-        val s = CompletableFuture.supplyAsync {
+        val c = CompletableFuture.supplyAsync {
             Thread.sleep(100)
             1
         }
-        val o = Observable.fromFuture(s, 50L, TimeUnit.MILLISECONDS)
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertError(TimeoutException::class.java)
-        subscriber.assertNotComplete()
-        subscriber.assertNoValues()
+        Observable.fromFuture(c, 50L, TimeUnit.MILLISECONDS)
+            .test()
+            .assertError(TimeoutException::class.java)
+            .assertNotComplete()
+            .assertNoValues()
+            .awaitDone(200L, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -98,40 +85,31 @@ class FromTest {
             Thread.sleep(100)
             1
         }
-        val o =
-            Observable.fromFuture(c, 50L, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Observable.fromFuture(c, 50, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .test()
+            .awaitDone(150L, TimeUnit.MILLISECONDS)
+            .assertError(TimeoutException::class.java)
+            .assertNotComplete()
+            .assertNoValues()
     }
 
     @Test
     fun it_successful_create_from_iterable() {
-        val i = 1..5
-        val o = Observable.fromIterable(i)
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValues(1, 2, 3, 4, 5)
+        val c = 1..5
+        Observable.fromIterable(c)
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValues(1, 2, 3, 4, 5)
     }
 
     @Test
     fun it_successful_create_from_array() {
-        val o = Observable.fromArray(1, 2, 3, 4, 5)
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValues(1, 2, 3, 4, 5)
+        Observable.fromArray(1, 2, 3, 4, 5)
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValues(1, 2, 3, 4, 5)
     }
 
     @Test
@@ -139,13 +117,10 @@ class FromTest {
         val c = Callable {
             1
         }
-        val o = Observable.fromCallable(c)
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertComplete()
-        subscriber.assertValue(1)
+        Observable.fromCallable(c)
+            .test()
+            .assertNoErrors()
+            .assertComplete()
+            .assertValue(1)
     }
 }

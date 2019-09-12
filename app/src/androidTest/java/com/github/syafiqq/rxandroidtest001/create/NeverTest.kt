@@ -2,7 +2,6 @@ package com.github.syafiqq.rxandroidtest001.create
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.Observable
-import io.reactivex.observers.TestObserver
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -10,13 +9,11 @@ import org.junit.runner.RunWith
 class NeverTest {
     @Test
     fun it_successful_implement_never() {
-        val o = Observable.never<Int>()
-
-        val subscriber = TestObserver<Int>()
-        o.subscribe(subscriber)
-
-        subscriber.assertNoErrors()
-        subscriber.assertNotComplete()
-        subscriber.assertNoValues()
+        Observable.never<Int>()
+            .test()
+            .assertSubscribed()
+            .assertNoErrors()
+            .assertNotComplete()
+            .assertNoValues()
     }
 }

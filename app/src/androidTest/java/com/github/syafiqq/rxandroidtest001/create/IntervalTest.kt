@@ -39,4 +39,35 @@ class IntervalTest {
             .assertComplete()
             .assertValues(0, 1)
     }
+
+    @Test
+    fun it_successful_implement_delay_interval() {
+        Observable.interval(100, 50, TimeUnit.MILLISECONDS)
+            .test()
+            .awaitDone(170L, TimeUnit.MILLISECONDS)
+            .assertNoErrors()
+            .assertNotComplete()
+    }
+
+    @Test
+    fun it_successful_implement_delay_interval_with_two_step() {
+        Observable.interval(100, 50, TimeUnit.MILLISECONDS)
+            .take(2)
+            .test()
+            .awaitDone(220L, TimeUnit.MILLISECONDS)
+            .assertNoErrors()
+            .assertComplete()
+            .assertValues(0, 1)
+    }
+
+    @Test
+    fun it_successful_implement_delay_interval_with_two_step_and_immediate_scheduler() {
+        Observable.interval(50, TimeUnit.MILLISECONDS, Schedulers.computation())
+            .take(2)
+            .test()
+            .awaitDone(220L, TimeUnit.MILLISECONDS)
+            .assertNoErrors()
+            .assertComplete()
+            .assertValues(0, 1)
+    }
 }

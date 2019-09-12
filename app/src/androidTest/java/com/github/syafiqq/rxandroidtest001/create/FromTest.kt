@@ -2,8 +2,8 @@ package com.github.syafiqq.rxandroidtest001.create
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.Observable
-import io.reactivex.internal.schedulers.ImmediateThinScheduler
 import io.reactivex.observers.TestObserver
+import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.Callable
@@ -33,7 +33,7 @@ class FromTest {
         val c = CompletableFuture.supplyAsync {
             1
         }
-        val o = Observable.fromFuture(c, ImmediateThinScheduler.INSTANCE)
+        val o = Observable.fromFuture(c, Schedulers.trampoline())
 
         val subscriber = TestObserver<Int>()
         o.subscribe(subscriber)
@@ -50,7 +50,7 @@ class FromTest {
             1
         }
         val o =
-            Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS, ImmediateThinScheduler.INSTANCE)
+            Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS, Schedulers.trampoline())
 
         val subscriber = TestObserver<Int>()
         o.subscribe(subscriber)
@@ -99,7 +99,7 @@ class FromTest {
             1
         }
         val o =
-            Observable.fromFuture(c, 50L, TimeUnit.MILLISECONDS, ImmediateThinScheduler.INSTANCE)
+            Observable.fromFuture(c, 50L, TimeUnit.MILLISECONDS, Schedulers.trampoline())
 
         val subscriber = TestObserver<Int>()
         o.subscribe(subscriber)

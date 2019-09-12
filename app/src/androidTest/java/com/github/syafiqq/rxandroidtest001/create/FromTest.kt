@@ -19,6 +19,7 @@ class FromTest {
         }
         Observable.fromFuture(c)
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValue(1)
@@ -31,6 +32,7 @@ class FromTest {
         }
         Observable.fromFuture(c, Schedulers.trampoline())
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValue(1)
@@ -44,6 +46,7 @@ class FromTest {
         }
         Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValue(1)
@@ -58,6 +61,7 @@ class FromTest {
         }
         Observable.fromFuture(c, 150L, TimeUnit.MILLISECONDS)
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValue(1)
@@ -73,6 +77,7 @@ class FromTest {
         }
         Observable.fromFuture(c, 50L, TimeUnit.MILLISECONDS)
             .test()
+            .assertSubscribed()
             .assertError(TimeoutException::class.java)
             .assertNotComplete()
             .assertNoValues()
@@ -84,6 +89,7 @@ class FromTest {
         val c = 1..5
         Observable.fromIterable(c)
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValues(1, 2, 3, 4, 5)
@@ -93,6 +99,7 @@ class FromTest {
     fun it_successful_create_from_array() {
         Observable.fromArray(1, 2, 3, 4, 5)
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValues(1, 2, 3, 4, 5)
@@ -105,6 +112,7 @@ class FromTest {
         }
         Observable.fromCallable(c)
             .test()
+            .assertSubscribed()
             .assertNoErrors()
             .assertComplete()
             .assertValue(1)

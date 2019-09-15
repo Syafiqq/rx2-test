@@ -1,4 +1,4 @@
-package com.github.syafiqq.rxandroidtest001.transform
+package com.github.syafiqq.rxandroidtest001.observable.transform
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.reactivex.Observable

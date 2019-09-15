@@ -1,4 +1,4 @@
-package com.github.syafiqq.rxandroidtest001.create
+package com.github.syafiqq.rxandroidtest001.observable.create
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.syafiqq.rxandroidtest001.exception.CustomException
@@ -77,7 +77,7 @@ class DeferTest {
 
     @Test
     fun it_successful_access_next_and_complete_with_array() {
-        val o = Observable.defer<Int> {
+        Observable.defer<Int> {
             Observable.create<Int> {
                 for (i in 1..10) {
                     it.onNext(i)

@@ -1,4 +1,4 @@
-package com.github.syafiqq.rxandroidtest001.create
+package com.github.syafiqq.rxandroidtest001.observable.create
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.syafiqq.rxandroidtest001.exception.CustomException
